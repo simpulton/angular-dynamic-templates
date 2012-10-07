@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html ng-app="myApp">
+<head>
+    <title>AngularJS Dynamic Template</title>
+
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+
+    <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+
+<div id="container" ng-controller="ContentCtrl">
+    <content-item ng-repeat="item in content" content="item"></content-item>
+</div>
+
+</body>
+</html>
