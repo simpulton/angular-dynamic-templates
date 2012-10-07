@@ -49,7 +49,6 @@ function ContentCtrl($scope, $http) {
 
     $scope.fetchContent = function() {
         $http.get($scope.url).then(function(result){
-            console.log('HELLO! ' + result.data);
             $scope.content = result.data;
         });
     }
