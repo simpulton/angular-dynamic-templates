@@ -33,7 +33,6 @@ app.directive('contentItem', function ($compile) {
 
     return {
         restrict: "E",
-        replace: true,
         link: linker,
         scope: {
             content:'='
