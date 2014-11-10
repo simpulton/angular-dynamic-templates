@@ -1,5 +1,15 @@
 var app = angular.module('myApp', []);
 
+app.config(function ($sceProvider, $sceDelegateProvider) {
+  $sceProvider.enabled(false);
+
+  $sceDelegateProvider.resourceUrlWhitelist([
+    // Allow same origin resource loads.
+    'self',
+    // Allow loading from our assets domain.  Notice the difference between * and **.
+    'http://vimeo.com/**']);
+});
+
 app.constant('URL', 'data/');
 
 app.factory('DataService', function($http, URL) {
@@ -63,7 +73,7 @@ app.directive('contentItem', function ($compile, TemplateService) {
     };
 });
 
-function ContentCtrl($scope, $http, DataService) {
+app.controller('ContentCtrl', function($scope, $http, DataService) {
     "use strict";
 
     $scope.content = [];
@@ -75,5 +85,5 @@ function ContentCtrl($scope, $http, DataService) {
     }
 
     $scope.fetchContent();
-}
+});
 
