@@ -27,42 +27,25 @@ app.factory('TemplateService', function($http, URL) {
     return $http.get(URL + 'templates.json');
   };
 
+  var getTemplate = function(content) {
+    return $http.get('templates/' + content + '.html');
+  };
+
   return {
-    getTemplates: getTemplates
+    getTemplates: getTemplates,
+    getTemplate: getTemplate
   };
 });
 
 app.directive('contentItem', function ($compile, TemplateService) {
-    var getTemplate = function(templates, contentType) {
-        var template = '';
-
-        switch(contentType) {
-            case 'image':
-                template = templates.imageTemplate;
-                break;
-            case 'video':
-                template = templates.videoTemplate;
-                break;
-            case 'notes':
-                template = templates.noteTemplate;
-                break;
-        }
-
-        return template;
-    }
-
     var linker = function(scope, element, attrs) {
         scope.rootDirectory = 'images/';
 
-        TemplateService.getTemplates().then(function(response) {
-          var templates = response.data;
-
-          element.html(getTemplate(templates, scope.content.content_type)).show();
-
-          $compile(element.contents())(scope);
+        TemplateService.getTemplate(scope.content.content_type).then(function(response) {
+            element.html(response.data).show();
+            $compile(element.contents())(scope);
         });
-
-    }
+    };
 
     return {
         restrict: "E",
