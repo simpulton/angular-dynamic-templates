@@ -19,6 +19,13 @@ body {
     background-position: fixed;
 }
 
+.entry {
+  display: inline-block;
+  vertical-align: text-top;
+  white-space: normal;
+  height: 400px;
+}
+
 .entry-photo {
     display: inline-block;
     vertical-align: text-top;
@@ -83,7 +90,7 @@ body {
 
 .entry-vid {
     display: block;
-    margin: 24px 0px 0px 70px;
+    margin: 0px 0px 0px 70px;
     width: 280px;
     height: 200px;
     background-color: #000;
@@ -144,4 +151,8 @@ body {
     display: block;
     margin: 15px 0px 0px 10px;
     width: 390px;
+}
+
+.entry-audio .entry-text {
+  text-align: center;
 }

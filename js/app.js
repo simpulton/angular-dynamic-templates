@@ -22,50 +22,33 @@ app.factory('DataService', function($http, URL) {
   };
 });
 
-app.factory('TemplateService', function($http, URL) {
-  var getTemplates = function() {
-    return $http.get(URL + 'templates.json');
-  };
-
-  var getTemplate = function(content) {
-    return $http.get('templates/' + content + '.html');
-  };
-
-  return {
-    getTemplates: getTemplates,
-    getTemplate: getTemplate
-  };
-});
-
-app.directive('contentItem', function ($compile, TemplateService) {
-    var linker = function(scope, element, attrs) {
-        scope.rootDirectory = 'images/';
-
-        TemplateService.getTemplate(scope.content.content_type).then(function(response) {
-            element.html(response.data).show();
-            $compile(element.contents())(scope);
-        });
-    };
-
-    return {
-        restrict: "E",
-        link: linker,
-        scope: {
-            content:'='
-        }
-    };
-});
-
-app.controller('ContentCtrl', function($scope, $http, DataService) {
+app.controller('ContentCtrl', function($scope, DataService, $sce) {
     "use strict";
 
+
     $scope.content = [];
+    $scope.types = {};
+    $scope.imageDirectory = 'images/';
+    $scope.audioDirectory = 'audio/';
+
+    var format = '.html';
+
+    $scope.concat = function(directory, file) {
+      return directory + file;
+    };
 
     $scope.fetchContent = function() {
         DataService.getData().then(function(result){
+            var templateUrl = 'templates/';
+
             $scope.content = result.data;
+
+            // get all content types
+            $scope.content.filter(function(item) {
+              $scope.types[item.content_type] = templateUrl + item.content_type + format;
+            });
         });
-    }
+    };
 
     $scope.fetchContent();
 });

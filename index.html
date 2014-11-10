@@ -12,7 +12,9 @@
 <body>
 
 <div id="container" ng-controller="ContentCtrl">
-    <content-item ng-repeat="item in content" content="item"></content-item>
+    <div ng-repeat="item in content" class="entry">
+      <div ng-repeat="(type, url) in types" ng-include="url" ng-if="type == item.content_type"></div>
+    </div>
 </div>
 
 </body>
