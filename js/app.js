@@ -1,42 +1,56 @@
 var app = angular.module('myApp', []);
 
 app.config(function ($sceProvider, $sceDelegateProvider) {
-  $sceProvider.enabled(false);
+    $sceProvider.enabled(false);
 
-  $sceDelegateProvider.resourceUrlWhitelist([
-    // Allow same origin resource loads.
-    'self',
-    // Allow loading from our assets domain.  Notice the difference between * and **.
-    'http://vimeo.com/**']);
+    $sceDelegateProvider.resourceUrlWhitelist([
+        // Allow same origin resource loads.
+        'self',
+        // Allow loading from our assets domain.  Notice the difference between * and **.
+        'http://vimeo.com/**']);
 });
 
 app.constant('URL', 'data/');
 
-app.factory('DataService', function($http, URL) {
-  var getData = function() {
-    return $http.get(URL + 'content.json');
-  };
+app.factory('DataService', function ($http, URL) {
+    var getData = function () {
+        return $http.get(URL + 'content.json');
+    };
 
-  return {
-    getData: getData
-  };
+    return {
+        getData: getData
+    };
 });
 
-app.factory('TemplateService', function($http, URL) {
-  var getTemplates = function() {
-    return $http.get(URL + 'templates.json');
-  };
+app.factory('TemplateService', function ($http, URL) {
+    var getTemplates = function () {
+        return $http.get(URL + 'templates.json');
+    };
 
-  return {
-    getTemplates: getTemplates
-  };
+    return {
+        getTemplates: getTemplates
+    };
+});
+
+app.controller('ContentCtrl', function (DataService) {
+    var ctrl = this;
+
+    ctrl.content = [];
+
+    ctrl.fetchContent = function () {
+        DataService.getData().then(function (result) {
+            ctrl.content = result.data;
+        });
+    };
+
+    ctrl.fetchContent();
 });
 
 app.directive('contentItem', function ($compile, TemplateService) {
-    var getTemplate = function(templates, contentType) {
+    var getTemplate = function (templates, contentType) {
         var template = '';
 
-        switch(contentType) {
+        switch (contentType) {
             case 'image':
                 template = templates.imageTemplate;
                 break;
@@ -49,41 +63,27 @@ app.directive('contentItem', function ($compile, TemplateService) {
         }
 
         return template;
-    }
+    };
 
-    var linker = function(scope, element, attrs) {
+    var linker = function (scope, element, attrs) {
         scope.rootDirectory = 'images/';
 
-        TemplateService.getTemplates().then(function(response) {
-          var templates = response.data;
+        TemplateService.getTemplates().then(function (response) {
+            var templates = response.data;
 
-          element.html(getTemplate(templates, scope.content.content_type)).show();
+            element.html(getTemplate(templates, scope.content.content_type));
 
-          $compile(element.contents())(scope);
+            $compile(element.contents())(scope);
         });
-
-    }
+    };
 
     return {
         restrict: "E",
         link: linker,
         scope: {
-            content:'='
+            content: '='
         }
     };
 });
 
-app.controller('ContentCtrl', function($scope, DataService) {
-    "use strict";
-
-    $scope.content = [];
-
-    $scope.fetchContent = function() {
-        DataService.getData().then(function(result){
-            $scope.content = result.data;
-        });
-    }
-
-    $scope.fetchContent();
-});
 
