@@ -73,7 +73,7 @@ app.directive('contentItem', function ($compile, TemplateService) {
     };
 });
 
-app.controller('ContentCtrl', function($scope, $http, DataService) {
+app.controller('ContentCtrl', function($scope, DataService) {
     "use strict";
 
     $scope.content = [];
