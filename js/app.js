@@ -78,7 +78,7 @@ app.directive('contentItem', function ($compile, TemplateService) {
     };
 
     return {
-        restrict: "E",
+        restrict: 'E',
         link: linker,
         scope: {
             content: '='
