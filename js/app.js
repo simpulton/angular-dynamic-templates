@@ -1,13 +1,7 @@
 var app = angular.module('myApp', []);
 
-app.config(function ($sceProvider, $sceDelegateProvider) {
-    $sceProvider.enabled(false);
-
-    $sceDelegateProvider.resourceUrlWhitelist([
-        // Allow same origin resource loads.
-        'self',
-        // Allow loading from our assets domain.  Notice the difference between * and **.
-        'http://vimeo.com/**']);
+app.config(function ($sceDelegateProvider) {
+    $sceDelegateProvider.resourceUrlWhitelist(['self', '**']);
 });
 
 app.constant('URL', 'data/');
