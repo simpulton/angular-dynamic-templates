@@ -22,7 +22,7 @@ app.factory('DataService', function ($http, URL) {
     };
 });
 
-app.factory('TemplateService', function ($http, URL) {
+app.factory('TemplateService', function ($http) {
     var getTemplate = function (content) {
         return $http.get('templates/' + content + '.html');
     };
