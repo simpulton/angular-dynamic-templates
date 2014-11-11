@@ -11,8 +11,8 @@
 </head>
 <body>
 
-<div id="container" ng-controller="ContentCtrl">
-    <content-item ng-repeat="item in content" content="item"></content-item>
+<div id="container" ng-controller="ContentCtrl as ctrl">
+    <content-item ng-repeat="item in ctrl.content" content="item"></content-item>
 </div>
 
 </body>
