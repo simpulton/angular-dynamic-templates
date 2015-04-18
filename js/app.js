@@ -42,21 +42,7 @@ app.controller('ContentCtrl', function (DataService) {
 
 app.directive('contentItem', function ($compile, TemplateService) {
     var getTemplate = function (templates, contentType) {
-        var template = '';
-
-        switch (contentType) {
-            case 'image':
-                template = templates.imageTemplate;
-                break;
-            case 'video':
-                template = templates.videoTemplate;
-                break;
-            case 'notes':
-                template = templates.noteTemplate;
-                break;
-        }
-
-        return template;
+        return templates[contentType] || '';
     };
 
     var linker = function (scope, element, attrs) {
