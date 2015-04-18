@@ -16,13 +16,44 @@ app.factory('DataService', function ($http, URL) {
     };
 });
 
-app.factory('TemplateService', function ($http, URL) {
-    var getTemplates = function () {
-        return $http.get(URL + 'templates.json');
+app.factory('TemplateService', function ($http, $compile, $q, URL) {
+    
+    var deferred    = $q.defer(),
+        templates   = null,
+        loadPromise = deferred.promise;
+
+    var loadTemplates = function () {
+        $http.get(URL + 'templates.json').then(function(res){
+            templates = res.data;
+            deferred.resolve();
+        });
+    };
+
+    var getTemplate = function (name) {
+        return templates[name] || '';
     };
 
     return {
-        getTemplates: getTemplates
+        load: function(){
+            loadTemplates();
+
+            return this;
+        },
+
+        compile:function(params){
+            var _compile = function(){
+                params.element.html( getTemplate(params.templateName) );
+
+                $compile( params.element.contents() )(params.scope);
+            }
+
+            if(null !== templates){
+                _compile();
+            }
+            else{
+                loadPromise.then(_compile);
+            }
+        }
     };
 });
 
@@ -40,7 +71,7 @@ app.controller('ContentCtrl', function (DataService) {
     ctrl.fetchContent();
 });
 
-app.directive('contentItem', function ($compile, TemplateService) {
+app.directive('contentItem', function (TemplateService) {
     var getTemplate = function (templates, contentType) {
         return templates[contentType] || '';
     };
@@ -48,13 +79,14 @@ app.directive('contentItem', function ($compile, TemplateService) {
     var linker = function (scope, element, attrs) {
         scope.rootDirectory = 'images/';
 
-        TemplateService.getTemplates().then(function (response) {
-            var templates = response.data;
+        TemplateService
+            .load()
+            .compile({
+                templateName    : scope.content.content_type,
+                scope           : scope,
+                element         : element
+            });
 
-            element.html(getTemplate(templates, scope.content.content_type));
-
-            $compile(element.contents())(scope);
-        });
     };
 
     return {
